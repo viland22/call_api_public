@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>CAll Api IMDB!</title>
+  </head>
+  <body class='bg-dark' onload="form_load()">
+    <!-- <h1>Hello, world!</h1> -->
+	<div class='container mt-2'>
+		<button class="btn btn-primary" onclick="get_imdb_api()">Get IMDB API</button>
+		<button class="btn btn-primary" onclick="counting()">Count</button>
+		<button class="btn btn-danger" onclick="hapus()">Clear</button>
+	</div>
+	<div class='container mt-3'>
+		<div class='row' id='main'>
+			
+		</div>
+		
+	</div>
+	
+	<script>
+	function form_load(){
+	
+	}
+	function hapus(){
+	$("#main").empty();
+	
+	}
+	
+	function get_weather_api(){
+		const settings = {
+	"async": true,
+	"crossDomain": true,
+	"url": "https://weatherapi-com.p.rapidapi.com/ip.json?q=%3CREQUIRED%3E",
+	"method": "GET",
+	"headers": {
+		"X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
+		"X-RapidAPI-Key": "9ee42fce74mshd0c793957ac0767p1d73d3jsn951a47910780"
+	}
+};
+
+$.ajax(settings).done(function (response) {
+	console.log(response);
+});
+	}
+	  
+	
+	function get_imdb_api(){
+	$.ajax({
+		  type: 'GET',
+		  async: true,
+		  timeout: 0,
+			dataType:"json",
+			contentType: 'application/json',
+			url: 'https://imdb-api.com/en/API/Top250Movies/k_2qdp96i9',
+		  <!-- url: 'https://jsonplaceholder.typicode.com/todos/1', -->
+		  <!-- headers:{          -->
+			  <!-- 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg', -->
+			  
+		  <!-- }, -->
+		  success: function (data, status, xhr) {
+			
+			var obj = jQuery.parseJSON(JSON.stringify(data));
+			//console.log(obj);
+			$.each(obj.items, function(key,value) {
+			if (value.rank<=10){
+				//console.log(value.title);
+				  var str='';
+				  str+='<div class="card col-md-2 mr-2 mb-2">';
+				  str+='<img class="card-img-top pt-1" src="'+value.image+'" alt="Card image cap" style="height:50%">';
+				  str+='<div class="card-body">';
+				  str+='<h5 class="card-title">'+value.title+'</h5>';
+				  str+='<p class="card-text">'+value.fullTitle+'</p>';
+				  str+='<p class="card-text">Rank : '+value.rank+'</p>';
+				  str+='<a href="#" class="btn btn-primary">Go somewhere</a>';
+				  str+='</div>';
+				  str+='</div>';
+				  $("#main").append(str);
+			  }
+			}); 
+		  }
+		});
+	}
+	
+	function counting(){
+	$.ajax({
+		  type: 'GET',
+		  async: true,
+		  timeout: 0,
+			dataType:"json",
+			contentType: 'application/json',
+			url: 'https://imdb-api.com/en/API/Top250Movies/k_2qdp96i9',
+		  <!-- url: 'https://jsonplaceholder.typicode.com/todos/1', -->
+		  <!-- headers:{          -->
+			  <!-- 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg', -->
+			  
+		  <!-- }, -->
+		  success: function (data, status, xhr) {
+			
+			var obj = jQuery.parseJSON(JSON.stringify(data));
+			//console.log(obj);
+			var group_year=[];
+			$.each(obj.items, function(key,value) {
+				//console.log(value.year);
+				var vy=value.year;
+				var filteredvalue = group_year.filter(function (item) {
+					  return (item.year == vy ? 1 : 0);
+				});
+				if (filteredvalue==0){
+					var arr_year = { year:vy};
+					group_year.push(arr_year);
+				}
+				
+				
+			}); 
+			//console.log(group_year);
+			$.each(group_year.year, function(key,value) {
+			console.log(group_year);
+			});
+		  }
+		});
+	}
+	</script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
